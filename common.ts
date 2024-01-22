@@ -20,7 +20,13 @@ export const logConfig: log4js.Log4js = log4js.configure({
 export const mnemonic: string | undefined = process.env.MNEMONIC;
 export const oAppAddress: string | undefined = process.env.OAPP_ADDRESS;
 export const API_KEY: string | undefined = process.env.BLOCKDAEMON_API_KEY;
+export const messageLibAddress: string | undefined = process.env.MESSAGE_LIB_ADDRESS;
+export const targetChainEndpointID: string | undefined =
+  process.env.TARGET_CHAIN_ENDPOINT_ID;
+export const sourceChainEndpointID: string | undefined =
+  process.env.SOURCE_CHAIN_ENDPOINT_ID;
 
+  
 export const mainnetRPC: string | undefined = process.env.MAINNET_RPC?.replace(
   "YOUR_API_KEY",
   process.env.BLOCKDAEMON_API_KEY || ""

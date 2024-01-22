@@ -12,6 +12,9 @@ import {
   blockdaemonFujiOracleAddress,
   blockdaemonGoerliOracleAddress,
   blockdaemonMumbaiOracleAddress,
+  messageLibAddress,
+  targetChainEndpointID,
+  sourceChainEndpointID,
 } from "./common";
 
 import { setOracle, getConfig } from "./interact-dvn";
@@ -19,6 +22,9 @@ import { sign } from "web3/lib/commonjs/eth.exports";
 const log = logConfig.getLogger("tool");
 
 async function main() {
+  // grab parameters from executable
+  const args = process.argv.slice(2);
+  log.info("Args: " + args);
   log.info("Starting setting up the oracle");
 
   log.info("App address: " + oAppAddress);
@@ -33,7 +39,10 @@ async function main() {
     !endpointAddresses ||
     !blockdaemonFujiOracleAddress ||
     !blockdaemonGoerliOracleAddress ||
-    !blockdaemonMumbaiOracleAddress
+    !blockdaemonMumbaiOracleAddress ||
+    !messageLibAddress ||
+    !targetChainEndpointID ||
+    !sourceChainEndpointID
   ) {
     throw new Error("Ensure all variables are defined in your .env file");
   }
@@ -45,14 +54,9 @@ async function main() {
   // get signer from wallet
   const signer = hdWallet.connect(provider);
 
-  // ulnv2 (302), goerli
-
-  const messageLibAddress = "0xb3f5e2ae7a0a7c4abc809730d8e5699020f466ef"; // https://docs.layerzero.network/contracts/messagelib-addresses
-  const targetChainEndpointID = "40109"; // Mumbai, list:https://docs.layerzero.network/contracts/endpoint-addresses#testnet-addresses
-
   let config: Result | undefined;
   config = await getConfig(
-    "40121",
+    sourceChainEndpointID,
     endpointAddresses["goerli"],
     signer,
     messageLibAddress,
@@ -68,7 +72,8 @@ async function main() {
     signer,
     targetChainEndpointID,
     messageLibAddress,
-    oAppAddress
+    oAppAddress,
+    true
   );
 
   if (!receipt) {
@@ -78,7 +83,7 @@ async function main() {
     log.info("Change config transaction sent successfully");
 
       config = await getConfig(
-        "40121",
+        sourceChainEndpointID,
         endpointAddresses["goerli"],
         signer,
         messageLibAddress,

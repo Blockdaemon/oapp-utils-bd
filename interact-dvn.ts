@@ -33,7 +33,8 @@ export async function setOracle(
   signer: HDNodeWallet,
   remoteChainEndpointID: string,
   messageLibAddress: string,
-  oappAddress: string
+  oappAddress: string,
+  gas: boolean
 ): Promise<TransactionReceipt | undefined> {
   if (endpoint === "") {
     throw new Error("Endpoint address not defined");
@@ -57,7 +58,7 @@ export async function setOracle(
       ? [blockdaemonMumbaiOracleAddress]
       : [blockdaemonGoerliOracleAddress];
   //const optionalDVNs = [] as any;
-  const optionalDVNs: any[] = ["0x0"]; // 0x0000000000000000000000000000000000000000
+  const optionalDVNs: any[] = ["0x0000000000000000000000000000000000000000"]; // 0x0000000000000000000000000000000000000000
   const configTypeUln = 2;
 
   log.info("oappAddress: " + oappAddress);
@@ -92,12 +93,13 @@ export async function setOracle(
   }
 
   // uses approximately 40k gas
+  let options = {};
   try {
     const tx = await endpointContract.setConfig(
       oappAddress,
       messageLibAddress,
       [setConfigParamUln],
-      { gasLimit: 42000, gasPrice: parseUnits("25000000000", "wei") }
+      options
     );
 
     log.info("Transaction hash: " + tx.hash);
