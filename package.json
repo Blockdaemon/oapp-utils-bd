@@ -1,0 +1,31 @@
+{
+  "name": "layerzero-set-oracle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RafaelAPB/layerzero-set-oracle-tools.git"
+  },
+  "author": "Rafael Belchior",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RafaelAPB/layerzero-set-oracle-tools/issues"
+  },
+  "homepage": "https://github.com/RafaelAPB/layerzero-set-oracle-tools#readme",
+  "devDependencies": {
+    "npx": "10.2.2",
+    "ts-node": "10.9.2",
+    "tsc": "2.0.4",
+    "typescript": "5.3.3"
+  },
+  "dependencies": {
+    "dotenv": "16.3.1",
+    "ethers": "6.10.0",
+    "log4js": "6.9.1",
+    "web3": "4.4.0"
+  }
+}
