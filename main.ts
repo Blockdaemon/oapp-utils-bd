@@ -18,13 +18,9 @@ import {
 } from "./common";
 
 import { setOracle, getConfig } from "./interact-dvn";
-import { sign } from "web3/lib/commonjs/eth.exports";
 const log = logConfig.getLogger("tool");
 
 async function main() {
-  // grab parameters from executable
-  const args = process.argv.slice(2);
-  log.info("Args: " + args);
   log.info("Starting setting up the oracle");
 
   log.info("App address: " + oAppAddress);
@@ -54,18 +50,19 @@ async function main() {
   // get signer from wallet
   const signer = hdWallet.connect(provider);
 
-  let config: Result | undefined;
-  config = await getConfig(
-    sourceChainEndpointID,
-    endpointAddresses["goerli"],
+  let initialConfig: Result | undefined;
+  let newConfig: Result | undefined;
+  initialConfig = await getConfig(
+    targetChainEndpointID,
+    endpointAddresses[networkChoice],
     signer,
     messageLibAddress,
     oAppAddress
   );
 
-  const initialOracle = config?.toArray();
-  log.info("Initial oracle: " + initialOracle);
-
+  if (initialConfig) {
+    log.info("Initial oracle: " + initialConfig[0][4]);
+  }
   receipt = await setOracle(
     endpointAddresses[networkChoice],
     provider,
@@ -81,17 +78,21 @@ async function main() {
   } else {
     log.trace(receipt);
     log.info("Change config transaction sent successfully");
+    log.info("Waiting for 20 seconds for the oracle to update");
+    // wait 20 seconds
+    await new Promise((resolve) => setTimeout(resolve, 20000));
 
-      config = await getConfig(
-        sourceChainEndpointID,
-        endpointAddresses["goerli"],
-        signer,
-        messageLibAddress,
-        oAppAddress
-      );
+    newConfig = await getConfig(
+      targetChainEndpointID,
+      endpointAddresses[networkChoice],
+      signer,
+      messageLibAddress,
+      oAppAddress
+    );
 
-      const chosenOracle = config?.toArray();
-      log.info("Updated oracle: " + chosenOracle);
+    if (newConfig)  {
+      log.info("Updated oracle: " + newConfig[0][4]);
+    }
   }
 }
 

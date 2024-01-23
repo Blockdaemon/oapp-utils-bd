@@ -58,21 +58,27 @@ export async function setOracle(
       ? [blockdaemonMumbaiOracleAddress]
       : [blockdaemonGoerliOracleAddress];
   //const optionalDVNs = [] as any;
-  const optionalDVNs: any[] = ["0x0000000000000000000000000000000000000000"]; // 0x0000000000000000000000000000000000000000
+  const optionalDVNs: any[] = []; // 0x0000000000000000000000000000000000000000
   const configTypeUln = 2;
 
   log.info("oappAddress: " + oappAddress);
   log.info("messageLibAddress: " + messageLibAddress);
+  // same as     ["uint64", "uint8", "uint8", "uint8", "address[]", "address[]"],
+
+  const ulnConfigEncoding =
+    "tuple(uint64 confirmations, uint8 requiredDVNCount, uint8 optionalDVNCount, uint8 optionalDVNThreshold, address[] requiredDVNs, address[] optionalDVNs) UlnConfig";
+
   const ulnConfigEncoded = encoder.encode(
-    ["uint64", "uint8", "uint8", "uint8", "address[]", "address[]"],
+    [ulnConfigEncoding],
     [
-      confirmations,
+      [confirmations,
       requiredDVNsCount,
       optionalDVNsCount,
       optionalDVNsThreshold,
       requiredDVNs,
       optionalDVNs,
     ]
+  ]
   );
 
   log.info("ULN Encoded config: " + ulnConfigEncoded);
@@ -94,6 +100,12 @@ export async function setOracle(
 
   // uses approximately 40k gas
   let options = {};
+  if (gas) {
+    options = {
+      gasLimit: 500000,
+      gasPrice: parseUnits("23000000000", "wei"),
+    }    
+  }
   try {
     const tx = await endpointContract.setConfig(
       oappAddress,

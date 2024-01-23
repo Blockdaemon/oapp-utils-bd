@@ -72,7 +72,7 @@ export const endpointAddresses: { [key: string]: string } = {
 };
 
 export const blockdaemonGoerliOracleAddress: string =
-  "0xe695699b08bddd9922079332625e5df265defa50";
+  "0xe695699B08bdDd9922079332625e5Df265dEfA50";
 export const blockdaemonFujiOracleAddress: string =
   "0xfb310c2ae76670f61f2ca48a514e9e3fae8282b6";
 export const blockdaemonMumbaiOracleAddress: string =
