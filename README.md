@@ -4,7 +4,7 @@ This tool sets up the Blockdaemon oracle for an Oapp.
 
 ### Requirements
 
-This is a Typescript project. Npm as package manager and node. Tested with npm v10.2.4, node 21.5.0.
+This is a Typescript project. Npm as package manager and node. Tested with npm v10.2.4, node 21.5.0. We recommend using [nvm](https://github.com/nvm-sh/nvm) for node version management.
 
 ## Getting started
 The Blockdaemon DVN currently supports the following chains:
@@ -15,7 +15,7 @@ The Blockdaemon DVN currently supports the following chains:
 | Polygon Mumbai (testnet)  | 40109           | mumbai                   | 0x3c2269811836af69497E5F486A85D7316753cf62 |
 
 
-1. Install node 21.5.0.
+1. Install node 21.5.0 (using nvm: ``nvm install 21.5.0 && nvm use 21.5.0``)
 
 2. Install the dependencies with `npm install`.
 
