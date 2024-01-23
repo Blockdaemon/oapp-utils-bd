@@ -20,13 +20,13 @@ export const logConfig: log4js.Log4js = log4js.configure({
 export const mnemonic: string | undefined = process.env.MNEMONIC;
 export const oAppAddress: string | undefined = process.env.OAPP_ADDRESS;
 export const API_KEY: string | undefined = process.env.BLOCKDAEMON_API_KEY;
-export const messageLibAddress: string | undefined = process.env.MESSAGE_LIB_ADDRESS;
+export const messageLibAddress: string | undefined =
+  process.env.MESSAGE_LIB_ADDRESS;
 export const targetChainEndpointID: string | undefined =
   process.env.TARGET_CHAIN_ENDPOINT_ID;
 export const sourceChainEndpointID: string | undefined =
   process.env.SOURCE_CHAIN_ENDPOINT_ID;
 
-  
 export const mainnetRPC: string | undefined = process.env.MAINNET_RPC?.replace(
   "YOUR_API_KEY",
   process.env.BLOCKDAEMON_API_KEY || ""
@@ -36,10 +36,19 @@ export const goerliRPC: string | undefined = process.env.GOERLI_RPC?.replace(
   "YOUR_API_KEY",
   process.env.BLOCKDAEMON_API_KEY || ""
 );
+export const mumbaiRPC: string | undefined = process.env.MUMBAI_RPC?.replace(
+  "YOUR_API_KEY",
+  process.env.BLOCKDAEMON_API_KEY || ""
+);
+export const fujiRPC: string | undefined = process.env.FUJI_RPC?.replace(
+  "YOUR_API_KEY",
+  process.env.BLOCKDAEMON_API_KEY || ""
+);
 
-export const blockdaemonRPCs: { [key: string]: string} = {
-  mainnet: mainnetRPC as string,
+export const blockdaemonRPCs: { [key: string]: string } = {
   goerli: goerliRPC as string,
+  fuji: fujiRPC as string,
+  mumbai: mumbaiRPC as string,
 };
 
 export const networkChoice: SupportedNetworks | undefined = (() => {
@@ -50,15 +59,13 @@ export const networkChoice: SupportedNetworks | undefined = (() => {
   }
 
   if (
-    rawNetworkChoice === "mainnet" ||
-    rawNetworkChoice === "sepolia" ||
+    rawNetworkChoice === "mumbai" ||
+    rawNetworkChoice === "fuji" ||
     rawNetworkChoice === "goerli"
   ) {
     return rawNetworkChoice as SupportedNetworks;
   } else {
-    throw new Error(
-      "Invalid network choice. Please choose either 'mainnet' or 'sepolia'."
-    );
+    throw new Error("Invalid network choice. Please refer to the docs.");
   }
 })();
 
@@ -78,7 +85,6 @@ export const blockdaemonFujiOracleAddress: string =
 export const blockdaemonMumbaiOracleAddress: string =
   "0x6aac22d61015383f5293c415979f5cbd5f2dd8e2";
 
-
 export async function getABIfromJson(
   filename: string
 ): Promise<any | undefined> {
@@ -91,8 +97,6 @@ export async function getABIfromJson(
     return undefined;
   }
 }
-
-
 
 export async function sendEther(
   wallet: HDNodeWallet,

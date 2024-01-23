@@ -52,6 +52,7 @@ async function main() {
 
   let initialConfig: Result | undefined;
   let newConfig: Result | undefined;
+
   initialConfig = await getConfig(
     targetChainEndpointID,
     endpointAddresses[networkChoice],
@@ -78,9 +79,9 @@ async function main() {
   } else {
     log.trace(receipt);
     log.info("Change config transaction sent successfully");
-    log.info("Waiting for 20 seconds for the oracle to update");
+    log.info("Waiting for 30 seconds for the oracle to update");
     // wait 20 seconds
-    await new Promise((resolve) => setTimeout(resolve, 20000));
+    await new Promise((resolve) => setTimeout(resolve, 30000));
 
     newConfig = await getConfig(
       targetChainEndpointID,

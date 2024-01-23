@@ -1,6 +1,6 @@
 {
-  "name": "layerzero-set-oracle",
-  "version": "1.0.0",
+  "name": "oapp-utils-bd",
+  "version": "0.0.1",
   "description": "",
   "main": "main.ts",
   "scripts": {
@@ -11,11 +11,11 @@
     "url": "git+https://github.com/RafaelAPB/layerzero-set-oracle-tools.git"
   },
   "author": "Rafael Belchior",
-  "license": "MIT",
+  "license": "Blockdaemon",
   "bugs": {
-    "url": "https://github.com/RafaelAPB/layerzero-set-oracle-tools/issues"
+    "url": "https://github.com/Blockdaemon/oapp-utils-bd/issues"
   },
-  "homepage": "https://github.com/RafaelAPB/layerzero-set-oracle-tools#readme",
+  "homepage": "https://github.com/Blockdaemon/oapp-utils-bd",
   "devDependencies": {
     "npx": "10.2.2",
     "ts-node": "10.9.2",
