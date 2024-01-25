@@ -1,29 +1,22 @@
 import { TransactionReceipt } from "web3";
 import {
   JsonRpcProvider,
-  Wallet,
   Contract,
   AbiCoder,
-  Mnemonic,
   HDNodeWallet,
-  parseEther,
   parseUnits,
   Result,
 } from "ethers";
 
 import {
   logConfig,
-  mnemonic,
   networkChoice,
   networks,
-  oAppAddress,
-  endpointAddresses,
-  blockdaemonRPCs,
   blockdaemonFujiOracleAddress,
   blockdaemonGoerliOracleAddress,
   blockdaemonMumbaiOracleAddress,
   getABIfromJson,
-} from "./common";
+} from "./utils/common";
 
 const log = logConfig.getLogger("tool");
 

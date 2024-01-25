@@ -3,8 +3,8 @@ import log4js from "log4js";
 import { promises as fs } from "fs";
 import path from "path";
 import { HDNodeWallet, parseEther, parseUnits } from "ethers";
+import { SupportedNetworks } from "./chain-config";
 
-type SupportedNetworks = "mainnet" | "sepolia" | "goerli";
 
 dotenv.config();
 
@@ -73,10 +73,6 @@ export const networks: { [key: string]: string } = {
   mainnet: mainnetRPC as string,
   goerli: goerliRPC as string,
 };
-export const endpointAddresses: { [key: string]: string } = {
-  mainnet: "",
-  goerli: "0x464570adA09869d8741132183721B4f0769a0287",
-};
 
 export const blockdaemonGoerliOracleAddress: string =
   "0xe695699B08bdDd9922079332625e5Df265dEfA50";
@@ -89,7 +85,7 @@ export async function getABIfromJson(
   filename: string
 ): Promise<any | undefined> {
   try {
-    const filePath = path.join(__dirname, path.join("abi", filename));
+    const filePath = path.join(path.join(__dirname, path.join("../../../")),path.join("data/abi", filename));
     const data = await fs.readFile(filePath, "utf8");
     return JSON.parse(data);
   } catch (error) {

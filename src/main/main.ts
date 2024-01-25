@@ -7,7 +7,6 @@ import {
   networkChoice,
   networks,
   oAppAddress,
-  endpointAddresses,
   blockdaemonRPCs,
   blockdaemonFujiOracleAddress,
   blockdaemonGoerliOracleAddress,
@@ -15,8 +14,9 @@ import {
   messageLibAddress,
   targetChainEndpointID,
   sourceChainEndpointID,
-} from "./common";
+} from "./utils/common";
 
+import { endpointAddresses } from "./utils/chain-config";
 import { setOracle, getConfig } from "./interact-dvn";
 const log = logConfig.getLogger("tool");
 
