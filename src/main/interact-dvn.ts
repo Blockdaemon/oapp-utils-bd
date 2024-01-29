@@ -17,6 +17,7 @@ import {
   blockdaemonMumbaiOracleAddress,
   getABIfromJson,
 } from "./utils/common";
+import { defaultBlockConfs } from "./utils/chain-config";
 
 const log = logConfig.getLogger("tool");
 
@@ -40,7 +41,7 @@ export async function setOracle(
   const encoder = AbiCoder.defaultAbiCoder();
 
   const choice = networkChoice ? networks[networkChoice] : "goerli";
-  const confirmations = 12;
+  const confirmations = networkChoice? defaultBlockConfs[networkChoice] || 0: 0;
   const requiredDVNsCount = 1;
   const optionalDVNsCount = 0;
   const optionalDVNsThreshold = 0;
