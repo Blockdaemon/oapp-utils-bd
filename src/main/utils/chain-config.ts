@@ -1,7 +1,8 @@
 export type SupportedNetworks = "goerli" | "fuji" | "mumbai";
 
 // recommendations here https://layerzero.gitbook.io/docs/technical-reference/mainnet/default-config
-export const defaultBlockConfs: Record<SupportedNetworks, number> = {
+// can set custom confirmations by  const confirmations = networkChoice? customBlockConfs[networkChoice] || 0: 0;
+export const customBlockConfs: Record<SupportedNetworks, number> = {
   goerli: 15,
   fuji: 12,
   mumbai: 512,

@@ -41,7 +41,8 @@ export async function setOracle(
   const encoder = AbiCoder.defaultAbiCoder();
 
   const choice = networkChoice ? networks[networkChoice] : "goerli";
-  const confirmations = networkChoice? defaultBlockConfs[networkChoice] || 0: 0;
+  // do not change confirmations: use the LZ defaults
+  const confirmations =  0;
   const requiredDVNsCount = 1;
   const optionalDVNsCount = 0;
   const optionalDVNsThreshold = 0;
