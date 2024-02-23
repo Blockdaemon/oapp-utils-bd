@@ -10,48 +10,50 @@ import {
 
 import {
   logConfig,
-  networkChoice,
-  networks,
-  blockdaemonFujiOracleAddress,
-  blockdaemonGoerliOracleAddress,
-  blockdaemonMumbaiOracleAddress,
+  targetChain,
+  blockdaemonRPCs,
   getABIfromJson,
+  blockdaemonAvalancheOracleAddress,
+  blockdaemonEthereumOracleAddress,
+  blockdaemonFantomOracleAddress,
+  blockdaemonOptimismOracleAddress,
+  blockdaemonPolygonOracleAddress,
 } from "./utils/common";
-import { defaultBlockConfs } from "./utils/chain-config";
+import {
+  SupportedNetwork,
+  networkNameToEndpointID,
+  eidToEndpointAddressMap,
+} from "./utils/chain-config";
 
 const log = logConfig.getLogger("tool");
 
 export async function setOracle(
-  endpoint: string,
-  web3: JsonRpcProvider,
+  sourceChain: SupportedNetwork,
+  targetChain: SupportedNetwork,
   signer: HDNodeWallet,
-  remoteChainEndpointID: string,
   messageLibAddress: string,
   oappAddress: string,
   gas: boolean
 ): Promise<TransactionReceipt | undefined> {
-  if (endpoint === "") {
-    throw new Error("Endpoint address not defined");
-  }
   const abi = await getABIfromJson("endpoint.json");
   if (!abi) {
     throw new Error("ABI not found");
   }
+  const eid = networkNameToEndpointID(sourceChain as SupportedNetwork);
+  if (!eid) {
+    throw new Error("Endpoint id not found");
+  }
+
+  const endpoint = eidToEndpointAddressMap[eid];
   const endpointContract = new Contract(endpoint, abi, signer);
   const encoder = AbiCoder.defaultAbiCoder();
-
-  const choice = networkChoice ? networks[networkChoice] : "goerli";
+  const remoteChainEndpointID = networkNameToEndpointID(targetChain);
+  const requiredDVNs = getRequiredDVNs(targetChain);
   // do not change confirmations: use the LZ defaults
-  const confirmations =  0;
+  const confirmations = 0;
   const requiredDVNsCount = 1;
   const optionalDVNsCount = 0;
   const optionalDVNsThreshold = 0;
-  const requiredDVNs =
-    choice === "fuji"
-      ? [blockdaemonFujiOracleAddress]
-      : choice === "mumbai"
-      ? [blockdaemonMumbaiOracleAddress]
-      : [blockdaemonGoerliOracleAddress];
   //const optionalDVNs = [] as any;
   const optionalDVNs: any[] = []; // 0x0000000000000000000000000000000000000000
   const configTypeUln = 2;
@@ -66,14 +68,15 @@ export async function setOracle(
   const ulnConfigEncoded = encoder.encode(
     [ulnConfigEncoding],
     [
-      [confirmations,
-      requiredDVNsCount,
-      optionalDVNsCount,
-      optionalDVNsThreshold,
-      requiredDVNs,
-      optionalDVNs,
+      [
+        confirmations,
+        requiredDVNsCount,
+        optionalDVNsCount,
+        optionalDVNsThreshold,
+        requiredDVNs,
+        optionalDVNs,
+      ],
     ]
-  ]
   );
 
   log.info("ULN Encoded config: " + ulnConfigEncoded);
@@ -98,8 +101,8 @@ export async function setOracle(
   if (gas) {
     options = {
       gasLimit: 500000,
-      gasPrice: parseUnits("23000000000", "wei"),
-    }    
+      gasPrice: parseUnits("40000000000", "wei"),
+    };
   }
   try {
     const tx = await endpointContract.setConfig(
@@ -118,8 +121,8 @@ export async function setOracle(
 }
 
 export async function getConfig(
-  eid: string,
-  endpoint: string,
+  sourceChain: string,
+  targetChain: string,
   signer: HDNodeWallet,
   messageLibAddress: string,
   oappAddress: string
@@ -129,13 +132,27 @@ export async function getConfig(
     throw new Error("ABI not found");
   }
   try {
+    const targetEid = networkNameToEndpointID(targetChain as SupportedNetwork);
+    const eid = networkNameToEndpointID(sourceChain as SupportedNetwork);
+    if (!eid) {
+      throw new Error("Endpoint id not found");
+    }
+    const endpoint = eidToEndpointAddressMap[eid];
+    log.info("Endpoint for source chain:", eid);
+
+    log.info("Endpoint address: ", endpoint);
+    log.info("Endpoint id: ", eid);
+    if (!endpoint) {
+      throw new Error("Endpoint address is undefined or null.");
+    }
+
     const endpointContract = new Contract(endpoint, abi, signer);
     const encoder = AbiCoder.defaultAbiCoder();
 
     const ulnConfigBytes = await endpointContract.getConfig(
       oappAddress,
       messageLibAddress,
-      eid,
+      targetEid,
       2
     );
 
@@ -147,5 +164,23 @@ export async function getConfig(
     return ulnConfigArray;
   } catch (err) {
     log.error(err);
+    throw new Error("Error getting config");
+  }
+}
+
+function getRequiredDVNs(choice: string): string[] {
+  switch (choice) {
+    case "ethereum":
+      return [blockdaemonEthereumOracleAddress];
+    case "avalanche":
+      return [blockdaemonAvalancheOracleAddress];
+    case "polygon":
+      return [blockdaemonPolygonOracleAddress];
+    case "optimism":
+      return [blockdaemonOptimismOracleAddress];
+    case "fantom":
+      return [blockdaemonFantomOracleAddress];
+    default:
+      return [blockdaemonEthereumOracleAddress]; // Default to Fuji if none match
   }
 }

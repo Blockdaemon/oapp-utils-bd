@@ -7,18 +7,18 @@
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
-  { "inputs": [], "name": "AlreadyRegistered", "type": "error" },
-  { "inputs": [], "name": "ComposeExists", "type": "error" },
+  { "inputs": [], "name": "LZ_AlreadyRegistered", "type": "error" },
+  { "inputs": [], "name": "LZ_ComposeExists", "type": "error" },
   {
     "inputs": [
       { "internalType": "bytes32", "name": "expected", "type": "bytes32" },
       { "internalType": "bytes32", "name": "actual", "type": "bytes32" }
     ],
-    "name": "ComposeNotFound",
+    "name": "LZ_ComposeNotFound",
     "type": "error"
   },
-  { "inputs": [], "name": "DefaultReceiveLibUnavailable", "type": "error" },
-  { "inputs": [], "name": "DefaultSendLibUnavailable", "type": "error" },
+  { "inputs": [], "name": "LZ_DefaultReceiveLibUnavailable", "type": "error" },
+  { "inputs": [], "name": "LZ_DefaultSendLibUnavailable", "type": "error" },
   {
     "inputs": [
       {
@@ -42,48 +42,48 @@
         "type": "uint256"
       }
     ],
-    "name": "InsufficientFee",
+    "name": "LZ_InsufficientFee",
     "type": "error"
   },
-  { "inputs": [], "name": "InvalidExpiry", "type": "error" },
+  { "inputs": [], "name": "LZ_InvalidExpiry", "type": "error" },
   {
     "inputs": [{ "internalType": "uint64", "name": "nonce", "type": "uint64" }],
-    "name": "InvalidNonce",
+    "name": "LZ_InvalidNonce",
     "type": "error"
   },
-  { "inputs": [], "name": "InvalidPayloadHash", "type": "error" },
-  { "inputs": [], "name": "InvalidReceiveLibrary", "type": "error" },
-  { "inputs": [], "name": "LzTokenUnavailable", "type": "error" },
-  { "inputs": [], "name": "OnlyNonDefaultLib", "type": "error" },
-  { "inputs": [], "name": "OnlyReceiveLib", "type": "error" },
-  { "inputs": [], "name": "OnlyRegisteredLib", "type": "error" },
-  { "inputs": [], "name": "OnlyRegisteredOrDefaultLib", "type": "error" },
-  { "inputs": [], "name": "OnlySendLib", "type": "error" },
-  { "inputs": [], "name": "PathNotInitializable", "type": "error" },
-  { "inputs": [], "name": "PathNotVerifiable", "type": "error" },
+  { "inputs": [], "name": "LZ_InvalidPayloadHash", "type": "error" },
+  { "inputs": [], "name": "LZ_InvalidReceiveLibrary", "type": "error" },
+  { "inputs": [], "name": "LZ_LzTokenUnavailable", "type": "error" },
+  { "inputs": [], "name": "LZ_OnlyNonDefaultLib", "type": "error" },
+  { "inputs": [], "name": "LZ_OnlyReceiveLib", "type": "error" },
+  { "inputs": [], "name": "LZ_OnlyRegisteredLib", "type": "error" },
+  { "inputs": [], "name": "LZ_OnlyRegisteredOrDefaultLib", "type": "error" },
+  { "inputs": [], "name": "LZ_OnlySendLib", "type": "error" },
+  { "inputs": [], "name": "LZ_PathNotInitializable", "type": "error" },
+  { "inputs": [], "name": "LZ_PathNotVerifiable", "type": "error" },
   {
     "inputs": [
       { "internalType": "bytes32", "name": "expected", "type": "bytes32" },
       { "internalType": "bytes32", "name": "actual", "type": "bytes32" }
     ],
-    "name": "PayloadHashNotFound",
+    "name": "LZ_PayloadHashNotFound",
     "type": "error"
   },
-  { "inputs": [], "name": "SameValue", "type": "error" },
-  { "inputs": [], "name": "SendReentrancy", "type": "error" },
-  { "inputs": [], "name": "ToAddressIsZero", "type": "error" },
+  { "inputs": [], "name": "LZ_SameValue", "type": "error" },
+  { "inputs": [], "name": "LZ_SendReentrancy", "type": "error" },
+  { "inputs": [], "name": "LZ_Unauthorized", "type": "error" },
+  { "inputs": [], "name": "LZ_UnsupportedEid", "type": "error" },
+  { "inputs": [], "name": "LZ_UnsupportedInterface", "type": "error" },
+  { "inputs": [], "name": "LZ_ZeroLzTokenFee", "type": "error" },
   {
     "inputs": [
       { "internalType": "address", "name": "_to", "type": "address" },
       { "internalType": "uint256", "name": "_value", "type": "uint256" }
     ],
-    "name": "TransferNativeFailed",
+    "name": "Transfer_NativeFailed",
     "type": "error"
   },
-  { "inputs": [], "name": "Unauthorized", "type": "error" },
-  { "inputs": [], "name": "UnsupportedEid", "type": "error" },
-  { "inputs": [], "name": "UnsupportedInterface", "type": "error" },
-  { "inputs": [], "name": "ZeroLzTokenFee", "type": "error" },
+  { "inputs": [], "name": "Transfer_ToAddressIsZero", "type": "error" },
   {
     "anonymous": false,
     "inputs": [
@@ -164,12 +164,6 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "oldLib",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
         "name": "newLib",
         "type": "address"
       }
@@ -219,6 +213,25 @@
       }
     ],
     "name": "DefaultSendLibrarySet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "delegate",
+        "type": "address"
+      }
+    ],
+    "name": "DelegateSet",
     "type": "event"
   },
   {
@@ -601,12 +614,6 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "oldLib",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
         "name": "newLib",
         "type": "address"
       }
@@ -793,27 +800,6 @@
   },
   {
     "inputs": [
-      {
-        "components": [
-          { "internalType": "uint32", "name": "srcEid", "type": "uint32" },
-          { "internalType": "bytes32", "name": "sender", "type": "bytes32" },
-          { "internalType": "uint64", "name": "nonce", "type": "uint64" }
-        ],
-        "internalType": "struct Origin",
-        "name": "_origin",
-        "type": "tuple"
-      },
-      { "internalType": "address", "name": "_receiver", "type": "address" }
-    ],
-    "name": "executable",
-    "outputs": [
-      { "internalType": "enum ExecutionState", "name": "", "type": "uint8" }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
       { "internalType": "address", "name": "_oapp", "type": "address" },
       { "internalType": "address", "name": "_lib", "type": "address" },
       { "internalType": "uint32", "name": "_eid", "type": "uint32" },
@@ -890,6 +876,25 @@
     "outputs": [
       { "internalType": "bytes32", "name": "payloadHash", "type": "bytes32" }
     ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "uint32", "name": "srcEid", "type": "uint32" },
+          { "internalType": "bytes32", "name": "sender", "type": "bytes32" },
+          { "internalType": "uint64", "name": "nonce", "type": "uint64" }
+        ],
+        "internalType": "struct Origin",
+        "name": "_origin",
+        "type": "tuple"
+      },
+      { "internalType": "address", "name": "_receiver", "type": "address" }
+    ],
+    "name": "initializable",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -1357,9 +1362,7 @@
         "name": "_origin",
         "type": "tuple"
       },
-      { "internalType": "address", "name": "_receiver", "type": "address" },
-      { "internalType": "address", "name": "_receiveLib", "type": "address" },
-      { "internalType": "bytes32", "name": "_payloadHash", "type": "bytes32" }
+      { "internalType": "address", "name": "_receiver", "type": "address" }
     ],
     "name": "verifiable",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],

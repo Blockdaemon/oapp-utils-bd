@@ -4,16 +4,11 @@ import { JsonRpcProvider, Result, Wallet } from "ethers";
 import {
   logConfig,
   mnemonic,
-  networkChoice,
-  networks,
+  sourceChain,
   oAppAddress,
   blockdaemonRPCs,
-  blockdaemonFujiOracleAddress,
-  blockdaemonGoerliOracleAddress,
-  blockdaemonMumbaiOracleAddress,
   messageLibAddress,
-  targetChainEndpointID,
-  sourceChainEndpointID,
+  targetChain,
 } from "./utils/common";
 
 import { endpointAddresses } from "./utils/chain-config";
@@ -21,29 +16,25 @@ import { setOracle, getConfig } from "./interact-dvn";
 const log = logConfig.getLogger("tool");
 
 async function main() {
+
   log.info("Starting setting up the oracle");
 
   log.info("App address: " + oAppAddress);
-  log.info("Network choice: " + networkChoice);
+  log.info("Network choice: " + sourceChain);
   log.info("Endpoints: " + endpointAddresses);
 
   if (
     !mnemonic ||
     !oAppAddress ||
-    !networkChoice ||
-    !networks ||
+    !sourceChain ||
     !endpointAddresses ||
-    !blockdaemonFujiOracleAddress ||
-    !blockdaemonGoerliOracleAddress ||
-    !blockdaemonMumbaiOracleAddress ||
     !messageLibAddress ||
-    !targetChainEndpointID ||
-    !sourceChainEndpointID
+    !targetChain
   ) {
     throw new Error("Ensure all variables are defined in your .env file");
   }
   let receipt: TransactionReceipt | undefined;
-  const chosenRPC = blockdaemonRPCs[networkChoice];
+  const chosenRPC = blockdaemonRPCs[sourceChain];
   const provider = new JsonRpcProvider(chosenRPC);
   const hdWallet = Wallet.fromPhrase(mnemonic);
 
@@ -53,9 +44,10 @@ async function main() {
   let initialConfig: Result | undefined;
   let newConfig: Result | undefined;
 
+  log.debug("Target chain endpoint ID: " + targetChain);
   initialConfig = await getConfig(
-    targetChainEndpointID,
-    endpointAddresses[networkChoice],
+    sourceChain,
+    targetChain,
     signer,
     messageLibAddress,
     oAppAddress
@@ -64,11 +56,11 @@ async function main() {
   if (initialConfig) {
     log.info("Initial oracle: " + initialConfig[0][4]);
   }
+
   receipt = await setOracle(
-    endpointAddresses[networkChoice],
-    provider,
+    sourceChain,
+    targetChain,
     signer,
-    targetChainEndpointID,
     messageLibAddress,
     oAppAddress,
     true
@@ -79,13 +71,13 @@ async function main() {
   } else {
     log.trace(receipt);
     log.info("Change config transaction sent successfully");
-    log.info("Waiting for 30 seconds for the oracle to update");
+    log.info("Waiting for 120 seconds for the oracle to update");
     // wait 20 seconds
-    await new Promise((resolve) => setTimeout(resolve, 30000));
+    await new Promise((resolve) => setTimeout(resolve, 120000));
 
     newConfig = await getConfig(
-      targetChainEndpointID,
-      endpointAddresses[networkChoice],
+      sourceChain,
+      targetChain,
       signer,
       messageLibAddress,
       oAppAddress

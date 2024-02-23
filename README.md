@@ -1,6 +1,6 @@
 # LayerZeroV2 Oracle Setup
 
-This tool sets up the Blockdaemon oracle for an Oapp.
+This tool sets up the Animoca-Blockdaemon joint DVN (AB-BD) for an Oapp.
 
 ### Requirements
 
@@ -8,12 +8,18 @@ This is a Typescript project. Npm as package manager and node. Tested with npm v
 
 ## Getting started
 
-The Blockdaemon DVN currently supports the following chains:
-| **Chain** | **Endpoint ID** | **Env variable NETWORK** | **Oracle Address** |
-|---------------------------|-----------------|--------------------------|--------------------------------------------|
-| Avalanche Fuji (testnet) | 40106 | fuji | 0xfb310c2ae76670f61f2ca48a514e9e3fae8282b6 |
-| Ethereum Goerli (testnet) | 40121 | goerli | 0xe695699b08bddd9922079332625e5df265defa50 |
-| Polygon Mumbai (testnet) | 40109 | mumbai | 0x6aac22d61015383f5293c415979f5cbd5f2dd8e2 |
+Our DVN currently supports the following chains:
+| **Chain**        | **Endpoint ID** | **Env variable NETWORK** | **DVN Address**                          |
+|------------------|-----------------|--------------------------|------------------------------------------|
+| Ethereum (mainnet) | 30101          | ethereum                 | 0x7E65BDd15C8Db8995F80aBf0D6593b57dc8BE437 |
+| Avalanche (mainnet) | 30106         | avalanche                | 0xFfe42DC3927A240f3459e5ec27EAaBD88727173E |
+| Polygon (mainnet)  | 30109          | polygon                  | 0xa6F5DDBF0Bd4D03334523465439D301080574742 |
+| Optimism (mainnet) | 30111          | optimism                 | 0x7B8a0fD9D6ae5011d5cBD3E85Ed6D5510F98c9Bf |
+| Fantom (mainnet)   | 30112          | fantom                   | 0x313328609a9C38459CaE56625FFf7F2AD6dcde3b |
+
+Our tool currently supports changing the DVN of all above networks except BSC and Arbitrum (coming soon).
+
+### Running the tool
 
 1. Install node 21.5.0 (using nvm: `nvm install 21.5.0 && nvm use 21.5.0`)
 
@@ -21,15 +27,14 @@ The Blockdaemon DVN currently supports the following chains:
 
 3. Copy the environment variables with `cp .env.example .env`.
 
-4. Populate the variables, including your Blockdaemon API Key (BLOCKDAEMON_API_KEY), the private key that you will be using to sign transactions (PRIVATE_KEY), the address of your LayerZero v2 application (OAPP_ADDRESS) and the network you are operating on (NETWORK). Make sure to choose a supported network, according to the above table.
+4. Populate the variables, including your Blockdaemon API Key (BLOCKDAEMON_API_KEY), the private key that you will be using to sign transactions in the form of a mnemonic (MNEMONIC), the address of your LayerZero v2 application (OAPP_ADDRESS), the network you are operating on (SOURCE_NETWORK), and the destination/target network (TARGET_NETWORK). Make sure to choose a supported network, according to the above table.
 
-5. Set the target chain endpoint ID (TARGET_CHAIN_ENDPOINT_ID). Check the endpoints here: https://docs.layerzero.network/contracts/endpoint-addresses. For example,the endpoint ID for Goerli is `40121`and for Mumbai is `40109`.
-6. Set the message library address (MESSAGE_LIB_ADDRESS). Libraries here: https://docs.layerzero.network/contracts/messagelib-addresses. For example, for Goerli, the version 2 (uln302) message library is `0xb3f5e2ae7a0a7c4abc809730d8e5699020f466ef`.
+5. If you need, set the message library address (MESSAGE_LIB_ADDRESS). We are using the default library. Libraries can be consulted here: https://docs.layerzero.network/contracts/messagelib-addresses.
 
-7. Run the main script with `ts-node src/main/main.ts`.
+6. Run the main script with `npx ts-node src/main/main.ts`. The script waits two minutes before confirming a change in the oracle, to accommodate for finalization times.
 
 ## FAQ
 
 #### Which chains does this tool support?
 
-A: This tool supports Blockdaemon-powered oracles, deployed at Fuji, Goerli, and Mumbai.
+A: This tool supports mainnet AB-BD-powered DNVs, except for Arbitrum and BSC.

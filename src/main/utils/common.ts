@@ -3,89 +3,143 @@ import log4js from "log4js";
 import { promises as fs } from "fs";
 import path from "path";
 import { HDNodeWallet, parseEther, parseUnits } from "ethers";
-import { SupportedNetworks } from "./chain-config";
-
+import { SupportedNetwork } from "./chain-config";
 
 dotenv.config();
 
+const logLevel = process.env.LOG_LEVEL || "debug";
 export const logConfig: log4js.Log4js = log4js.configure({
   appenders: {
     console: { type: "console" },
   },
   categories: {
-    default: { appenders: ["console"], level: "debug" },
+    default: {
+      appenders: ["console"],
+      level: logLevel,
+    },
   },
 });
 
+export const API_KEY: string =
+  process.env.BLOCKDAEMON_API_KEY ||
+  (() => {
+    console.log("BLOCKDAEMON_API_KEY is not defined");
+    throw new Error("BLOCKDAEMON_API_KEY is not defined");
+  })();
+
 export const mnemonic: string | undefined = process.env.MNEMONIC;
 export const oAppAddress: string | undefined = process.env.OAPP_ADDRESS;
-export const API_KEY: string | undefined = process.env.BLOCKDAEMON_API_KEY;
+
 export const messageLibAddress: string | undefined =
   process.env.MESSAGE_LIB_ADDRESS;
-export const targetChainEndpointID: string | undefined =
-  process.env.TARGET_CHAIN_ENDPOINT_ID;
-export const sourceChainEndpointID: string | undefined =
-  process.env.SOURCE_CHAIN_ENDPOINT_ID;
 
-export const mainnetRPC: string | undefined = process.env.MAINNET_RPC?.replace(
-  "YOUR_API_KEY",
-  process.env.BLOCKDAEMON_API_KEY || ""
-);
+export const ETHEREUM_RPC =
+  "https://svc.blockdaemon.com/ethereum/mainnet/native?apiKey=YOUR_API_KEY".replace(
+    "YOUR_API_KEY",
+    API_KEY
+  );
+export const AVALANCHE_RPC =
+  "https://svc.blockdaemon.com/avalanche/mainnet/native?apiKey=YOUR_API_KEY".replace(
+    "YOUR_API_KEY",
+    API_KEY
+  );
+export const POLYGON_RPC =
+  "https://svc.blockdaemon.com/polygon/mainnet/native?apiKey=YOUR_API_KEY".replace(
+    "YOUR_API_KEY",
+    API_KEY
+  );
+export const OPTIMISM_RPC =
+  "https://svc.blockdaemon.com/optimism/mainnet/native?apiKey=YOUR_API_KEY".replace(
+    "YOUR_API_KEY",
+    API_KEY
+  );
+export const FANTOM_RPC =
+  "https://svc.blockdaemon.com/fantom/mainnet/native?apiKey=YOUR_API_KEY".replace(
+    "YOUR_API_KEY",
+    API_KEY
+  );
 
-export const goerliRPC: string | undefined = process.env.GOERLI_RPC?.replace(
-  "YOUR_API_KEY",
-  process.env.BLOCKDAEMON_API_KEY || ""
-);
-export const mumbaiRPC: string | undefined = process.env.MUMBAI_RPC?.replace(
-  "YOUR_API_KEY",
-  process.env.BLOCKDAEMON_API_KEY || ""
-);
-export const fujiRPC: string | undefined = process.env.FUJI_RPC?.replace(
-  "YOUR_API_KEY",
-  process.env.BLOCKDAEMON_API_KEY || ""
-);
-
-export const blockdaemonRPCs: { [key: string]: string } = {
-  goerli: goerliRPC as string,
-  fuji: fujiRPC as string,
-  mumbai: mumbaiRPC as string,
-};
-
-export const networkChoice: SupportedNetworks | undefined = (() => {
-  const rawNetworkChoice = process.env.NETWORK;
+export const sourceChain: SupportedNetwork | undefined = (() => {
+  const rawNetworkChoice = process.env.SOURCE_NETWORK;
 
   if (!rawNetworkChoice) {
     return undefined;
   }
-
   if (
-    rawNetworkChoice === "mumbai" ||
-    rawNetworkChoice === "fuji" ||
-    rawNetworkChoice === "goerli"
+    rawNetworkChoice === "ethereum" ||
+    rawNetworkChoice === "avalanche" ||
+    rawNetworkChoice === "polygon" ||
+    rawNetworkChoice === "optimism" ||
+    rawNetworkChoice === "fantom"
+    // ubiquity needs bsc and arbitrum support
   ) {
-    return rawNetworkChoice as SupportedNetworks;
+    return rawNetworkChoice as SupportedNetwork;
   } else {
     throw new Error("Invalid network choice. Please refer to the docs.");
   }
 })();
 
-export const networks: { [key: string]: string } = {
-  mainnet: mainnetRPC as string,
-  goerli: goerliRPC as string,
+export const targetChain: SupportedNetwork | undefined = (() => {
+  const rawNetworkChoice = process.env.TARGET_NETWORK;
+
+  if (!rawNetworkChoice) {
+    return undefined;
+  }
+  if (
+    rawNetworkChoice === "ethereum" ||
+    rawNetworkChoice === "avalanche" ||
+    rawNetworkChoice === "polygon" ||
+    rawNetworkChoice === "optimism" ||
+    rawNetworkChoice === "fantom"
+    // ubiquity needs bsc and arbitrum support
+  ) {
+    return rawNetworkChoice as SupportedNetwork;
+  } else {
+    throw new Error("Invalid network choice. Please refer to the docs.");
+  }
+})();
+
+// TODO add bsc and arbitrum support
+export const blockdaemonRPCs: { [key: string]: string } = {
+  ethereum: ETHEREUM_RPC as string,
+  avalanche: AVALANCHE_RPC as string,
+  polygon: POLYGON_RPC as string,
+  optimism: OPTIMISM_RPC as string,
+  fantom: FANTOM_RPC as string,
 };
 
-export const blockdaemonGoerliOracleAddress: string =
-  "0xe695699B08bdDd9922079332625e5Df265dEfA50";
-export const blockdaemonFujiOracleAddress: string =
-  "0xfb310c2ae76670f61f2ca48a514e9e3fae8282b6";
-export const blockdaemonMumbaiOracleAddress: string =
-  "0x6aac22d61015383f5293c415979f5cbd5f2dd8e2";
+export const blockdaemonEthereumOracleAddress: string =
+  "0x7E65BDd15C8Db8995F80aBf0D6593b57dc8BE437";
+
+export const blockdaemonAvalancheOracleAddress: string =
+  "0xFfe42DC3927A240f3459e5ec27EAaBD88727173E";
+
+export const blockdaemonPolygonOracleAddress: string =
+  "0xa6F5DDBF0Bd4D03334523465439D301080574742";
+
+export const blockdaemonOptimismOracleAddress: string =
+  "0x7B8a0fD9D6ae5011d5cBD3E85Ed6D5510F98c9Bf";
+
+export const blockdaemonFantomOracleAddress: string =
+  "0x313328609a9C38459CaE56625FFf7F2AD6dcde3b";
+
+// todo add support
+/*
+export const blockdaemonArbitrumOracleAddress: string =
+  "0xddaa92ce2d2faC3f7c5eae19136E438902Ab46cc";
+
+export const blockdaemonBSCOracleAddress: string =
+  "0x313328609a9C38459CaE56625FFf7F2AD6dcde3b";
+*/
 
 export async function getABIfromJson(
   filename: string
 ): Promise<any | undefined> {
   try {
-    const filePath = path.join(path.join(__dirname, path.join("../../../")),path.join("data/abi", filename));
+    const filePath = path.join(
+      path.join(__dirname, path.join("../../../")),
+      path.join("data/abi", filename)
+    );
     const data = await fs.readFile(filePath, "utf8");
     return JSON.parse(data);
   } catch (error) {
