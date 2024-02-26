@@ -6,6 +6,7 @@ import {
   HDNodeWallet,
   parseUnits,
   Result,
+  ContractTransactionResponse,
 } from "ethers";
 
 import {
@@ -34,7 +35,7 @@ export async function setOracle(
   messageLibAddress: string,
   oappAddress: string,
   gas: boolean
-): Promise<TransactionReceipt | undefined> {
+): Promise<ContractTransactionResponse | undefined> {
   const abi = await getABIfromJson("endpoint.json");
   if (!abi) {
     throw new Error("ABI not found");
@@ -100,19 +101,19 @@ export async function setOracle(
   let options = {};
   if (gas) {
     options = {
-      gasLimit: 500000,
-      gasPrice: parseUnits("40000000000", "wei"),
+      // 500 gwei
+      gasPrice: parseUnits("500000000000", "wei"),
     };
   }
   try {
-    const tx = await endpointContract.setConfig(
+    const tx: ContractTransactionResponse = await endpointContract.setConfig(
       oappAddress,
       messageLibAddress,
       [setConfigParamUln],
       options
     );
 
-    log.info("Transaction hash: " + tx.hash);
+    log.trace("Transaction hash: " + tx.hash);
 
     return tx;
   } catch (err) {
@@ -134,17 +135,18 @@ export async function getConfig(
   try {
     const targetEid = networkNameToEndpointID(targetChain as SupportedNetwork);
     const eid = networkNameToEndpointID(sourceChain as SupportedNetwork);
-    if (!eid) {
+    if (!eid || !targetEid)  {
       throw new Error("Endpoint id not found");
     }
     const endpoint = eidToEndpointAddressMap[eid];
-    log.info("Endpoint for source chain:", eid);
-
-    log.info("Endpoint address: ", endpoint);
-    log.info("Endpoint id: ", eid);
     if (!endpoint) {
       throw new Error("Endpoint address is undefined or null.");
     }
+
+    log.info("Endpoint for source chain:", eid);
+    log.info("Endpoint address: ", endpoint);
+    log.info("Endpoint id: ", eid);
+
 
     const endpointContract = new Contract(endpoint, abi, signer);
     const encoder = AbiCoder.defaultAbiCoder();

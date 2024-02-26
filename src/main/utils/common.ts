@@ -44,17 +44,17 @@ export const AVALANCHE_RPC =
     API_KEY
   );
 export const POLYGON_RPC =
-  "https://svc.blockdaemon.com/polygon/mainnet/native?apiKey=YOUR_API_KEY".replace(
+  "https://svc.blockdaemon.com/polygon/mainnet/native/http-rpc?apiKey=YOUR_API_KEY".replace(
     "YOUR_API_KEY",
     API_KEY
   );
 export const OPTIMISM_RPC =
-  "https://svc.blockdaemon.com/optimism/mainnet/native?apiKey=YOUR_API_KEY".replace(
+  "https://svc.blockdaemon.com/optimism/mainnet/native/http-rpc?apiKey=YOUR_API_KEY".replace(
     "YOUR_API_KEY",
     API_KEY
   );
 export const FANTOM_RPC =
-  "https://svc.blockdaemon.com/fantom/mainnet/native?apiKey=YOUR_API_KEY".replace(
+  "https://svc.blockdaemon.com/fantom/mainnet/native/http-rpce?apiKey=YOUR_API_KEY".replace(
     "YOUR_API_KEY",
     API_KEY
   );

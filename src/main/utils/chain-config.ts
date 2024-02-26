@@ -49,15 +49,12 @@ const idToChainNameMap: { [key in EndpointId]: string } = {
 export function networkNameToEndpointID(
   networkName: SupportedNetwork
 ): string | undefined {
-  // Retrieve the endpoint address using the network name
-  const endpointAddress = endpointAddresses[networkName];
 
-  // Find the endpoint ID that matches the endpoint address
-  const endpointID = Object.keys(eidToEndpointAddressMap).find(
-    (id) => eidToEndpointAddressMap[id] === endpointAddress
+  const endpointID = Object.keys(idToChainNameMap).find(
+    (id) => idToChainNameMap[id as EndpointId] === networkName
   );
 
-  return endpointID; // This will be undefined if no match is found
+  return endpointID;
 }
 
 
