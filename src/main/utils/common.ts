@@ -54,7 +54,18 @@ export const OPTIMISM_RPC =
     API_KEY
   );
 export const FANTOM_RPC =
-  "https://svc.blockdaemon.com/fantom/mainnet/native/http-rpce?apiKey=YOUR_API_KEY".replace(
+  "https://svc.blockdaemon.com/fantom/mainnet/native/http-rpc?apiKey=YOUR_API_KEY".replace(
+    "YOUR_API_KEY",
+    API_KEY
+  );
+export const BASE_RPC =
+  "https://svc.blockdaemon.com/base/mainnet/native/http-rpc?apiKey=YOUR_API_KEY".replace(
+    "YOUR_API_KEY",
+    API_KEY
+  );
+
+export const ARBITRUM_RPC =
+  "https://svc.blockdaemon.com/arbitrum/mainnet/native/http-rpc?apiKey=YOUR_API_KEY".replace(
     "YOUR_API_KEY",
     API_KEY
   );
@@ -70,12 +81,14 @@ export const sourceChain: SupportedNetwork | undefined = (() => {
     rawNetworkChoice === "avalanche" ||
     rawNetworkChoice === "polygon" ||
     rawNetworkChoice === "optimism" ||
+    rawNetworkChoice === "base" ||
+    // rawNetworkChoice === "bnb" || // no rpc support
+    rawNetworkChoice === "arbitrum" ||
     rawNetworkChoice === "fantom"
-    // ubiquity needs bsc and arbitrum support
   ) {
     return rawNetworkChoice as SupportedNetwork;
   } else {
-    throw new Error("Invalid network choice. Please refer to the docs.");
+    throw new Error("Invalid network choice. Please refer to the readme and the docs at https://docs.blockdaemon.com/reference/rpc-api-overview");
   }
 })();
 
@@ -90,8 +103,10 @@ export const targetChain: SupportedNetwork | undefined = (() => {
     rawNetworkChoice === "avalanche" ||
     rawNetworkChoice === "polygon" ||
     rawNetworkChoice === "optimism" ||
+    rawNetworkChoice === "base" ||
+    // rawNetworkChoice === "bnb" || // no rpc support
+    rawNetworkChoice === "arbitrum" ||
     rawNetworkChoice === "fantom"
-    // ubiquity needs bsc and arbitrum support
   ) {
     return rawNetworkChoice as SupportedNetwork;
   } else {
@@ -99,13 +114,14 @@ export const targetChain: SupportedNetwork | undefined = (() => {
   }
 })();
 
-// TODO add bsc and arbitrum support
 export const blockdaemonRPCs: { [key: string]: string } = {
   ethereum: ETHEREUM_RPC as string,
   avalanche: AVALANCHE_RPC as string,
   polygon: POLYGON_RPC as string,
   optimism: OPTIMISM_RPC as string,
   fantom: FANTOM_RPC as string,
+  base: BASE_RPC as string,
+  arbitrum: ARBITRUM_RPC as string,
 };
 
 export const blockdaemonEthereumOracleAddress: string =
@@ -123,14 +139,14 @@ export const blockdaemonOptimismOracleAddress: string =
 export const blockdaemonFantomOracleAddress: string =
   "0x313328609a9C38459CaE56625FFf7F2AD6dcde3b";
 
-// todo add support
-/*
-export const blockdaemonArbitrumOracleAddress: string =
-  "0xddaa92ce2d2faC3f7c5eae19136E438902Ab46cc";
+export const blockdaemonArbitrumAddress: string =
+  "0xddaa92ce2d2fac3f7c5eae19136e438902ab46cc";
 
-export const blockdaemonBSCOracleAddress: string =
-  "0x313328609a9C38459CaE56625FFf7F2AD6dcde3b";
-*/
+ export const blockdaemonBNBAddress: string =
+  "0x313328609a9c38459cae56625fff7f2ad6dcde3b";
+
+ export const blockdaemonBaseAddress: string =
+  "0x41ef29f974fc9f6772654f005271c64210425391";
 
 export async function getABIfromJson(
   filename: string
@@ -161,11 +177,9 @@ export async function sendEther(
   };
 
   try {
-    // Send the transaction
     const createReceipt = await wallet.sendTransaction(tx);
     console.log("Transaction hash:", createReceipt.hash);
 
-    // Wait for the transaction to be mined
     const receipt = await createReceipt.wait();
     console.log("Receipt:", receipt);
 

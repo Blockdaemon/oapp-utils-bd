@@ -114,6 +114,12 @@ function printReceipt(receipt: ContractTransactionResponse, chain: SupportedNetw
     case "fantom":
       scannerURL = "https://ftmscan.com/tx/";
       break;
+    case "arbitrum":
+      scannerURL = "https://arbiscan.io/tx/";
+      break;
+    case "base":
+      scannerURL = "https://basescan.org/tx/";
+      break;
     default:
       log.error("Chain not supported");
   }

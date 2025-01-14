@@ -16,8 +16,10 @@ Our DVN currently supports the following chains:
 | Polygon (mainnet)  | 30109          | polygon                  | 0xa6F5DDBF0Bd4D03334523465439D301080574742 |
 | Optimism (mainnet) | 30111          | optimism                 | 0x7B8a0fD9D6ae5011d5cBD3E85Ed6D5510F98c9Bf |
 | Fantom (mainnet)   | 30112          | fantom                   | 0x313328609a9C38459CaE56625FFf7F2AD6dcde3b |
+| Arbitrum (mainnet)   | 30110          | arbitrum                   | 0xddaa92ce2d2fac3f7c5eae19136e438902ab46cc |
+| BNB Smart Chain (mainnet)   | 30102          | bnb                   | 0x313328609a9c38459cae56625fff7f2ad6dcde3b |
+| Base (mainnet, lzRead only)   | 30184          | base                   | 0x41ef29f974fc9f6772654f005271c64210425391 |
 
-Our tool currently supports changing the DVN of all above networks except BSC and Arbitrum (coming soon).
 
 ### Running the tool
 
@@ -37,4 +39,4 @@ Our tool currently supports changing the DVN of all above networks except BSC an
 
 #### Which chains does this tool support?
 
-A: This tool supports mainnet BD-powered DNVs, except for Arbitrum and BSC.
+A: This tool supports mainnet BD-powered DNVs: https://docs.layerzero.network/v2/developers/evm/technical-reference/dvn-addresses (BNB RPCs support to be added)

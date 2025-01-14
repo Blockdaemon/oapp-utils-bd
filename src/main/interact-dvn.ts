@@ -1,6 +1,4 @@
-import { TransactionReceipt } from "web3";
 import {
-  JsonRpcProvider,
   Contract,
   AbiCoder,
   HDNodeWallet,
@@ -11,14 +9,14 @@ import {
 
 import {
   logConfig,
-  targetChain,
-  blockdaemonRPCs,
   getABIfromJson,
   blockdaemonAvalancheOracleAddress,
   blockdaemonEthereumOracleAddress,
   blockdaemonFantomOracleAddress,
   blockdaemonOptimismOracleAddress,
   blockdaemonPolygonOracleAddress,
+  blockdaemonArbitrumAddress,
+  blockdaemonBaseAddress,
 } from "./utils/common";
 import {
   SupportedNetwork,
@@ -44,12 +42,12 @@ export async function setOracle(
   if (!eid) {
     throw new Error("Endpoint id not found");
   }
-
   const endpoint = eidToEndpointAddressMap[eid];
   const endpointContract = new Contract(endpoint, abi, signer);
   const encoder = AbiCoder.defaultAbiCoder();
   const remoteChainEndpointID = networkNameToEndpointID(targetChain);
   const requiredDVNs = getRequiredDVNs(targetChain);
+
   // do not change confirmations: use the LZ defaults
   const confirmations = 0;
   const requiredDVNsCount = 1;
@@ -83,7 +81,7 @@ export async function setOracle(
   log.info("ULN Encoded config: " + ulnConfigEncoded);
 
   const setConfigParamUln = {
-    eid: remoteChainEndpointID, // Replace with your remote chain's endpoint ID (source or destination)
+    eid: remoteChainEndpointID,
     configType: configTypeUln,
     config: ulnConfigEncoded,
   };
@@ -182,7 +180,11 @@ function getRequiredDVNs(choice: string): string[] {
       return [blockdaemonOptimismOracleAddress];
     case "fantom":
       return [blockdaemonFantomOracleAddress];
+    case "arbitrum":
+      return [blockdaemonArbitrumAddress];
+    case "base":
+      return [blockdaemonBaseAddress];
     default:
-      return [blockdaemonEthereumOracleAddress]; // Default to Fuji if none match
+      return [blockdaemonEthereumOracleAddress];
   }
 }

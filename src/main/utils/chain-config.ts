@@ -3,47 +3,44 @@ export type SupportedNetwork =
   | "avalanche"
   | "polygon"
   | "optimism"
+  | "arbitrum"
+  | "base"
   | "fantom";
-
-
 
 // testnet list here https://docs.layerzero.network/contracts/endpoint-addresses
 export const endpointAddresses: Record<SupportedNetwork, string> = {
-  // fuji: "0x6edce65403992e310a62460808c4b910d972f10f",
-  // mumbai: "0x6edce65403992e310a62460808c4b910d972f10f",
-  // mainnets
-  ethereum: "0x1a44076050125825900e736c501f859c50fe728c",
-  avalanche: "0x1a44076050125825900e736c501f859c50fe728c",
-  polygon: "0x1a44076050125825900e736c501f859c50fe728c",
-  optimism: "0x1a44076050125825900e736c501f859c50fe728c",
-  fantom: "0x1a44076050125825900e736c501f859c50fe728c",
-  // bsc: "0x1a44076050125825900e736c501f859c50fe728c",
-  // arbitrum: "0x1a44076050125825900e736c501f859c50fe728c",
+  ethereum: "0x7e65bdd15c8db8995f80abf0d6593b57dc8be437",
+  avalanche: "0xffe42dc3927a240f3459e5ec27eaabd88727173e",
+  polygon: "0xa6f5ddbf0bd4d03334523465439d301080574742",
+  optimism: "0x7b8a0fd9d6ae5011d5cbd3e85ed6d5510f98c9bf",
+  arbitrum: "0xddaa92ce2d2fac3f7c5eae19136e438902ab46cc",
+  fantom: "0x313328609a9c38459cae56625fff7f2ad6dcde3b",
+  base: "0x41ef29f974fc9f6772654f005271c64210425391",
+  // bnb: "0x313328609a9c38459cae56625fff7f2ad6dcde3b", // no rpc support
 };
 export const eidToEndpointAddressMap: { [key: string]: string } = {
-  "30101": "0x1a44076050125825900e736c501f859c50fe728c", // Ethereum
-  // "30102": "0x1a44076050125825900e736c501f859c50fe728c", // BNB Chain (BSC)
-  "30106": "0x1a44076050125825900e736c501f859c50fe728c", // Avalanche
-  "30109": "0x1a44076050125825900e736c501f859c50fe728c", // Polygon
-  // "30110": "0x1a44076050125825900e736c501f859c50fe728c", // Arbitrum
-  "30111": "0x1a44076050125825900e736c501f859c50fe728c", // Optimism
-  "30112": "0x1a44076050125825900e736c501f859c50fe728c", // Fantom
-  // "40106": "0x6edce65403992e310a62460808c4b910d972f10f", // Fuji (Avalanche Testnet)
-  // "40109": "0x6edce65403992e310a62460808c4b910d972f10f", // Mumbai (Polygon Testnet)
+  "30101": "0x7e65bdd15c8db8995f80abf0d6593b57dc8be437", // Ethereum
+  "30106": "0xffe42dc3927a240f3459e5ec27eaabd88727173e", // Avalanche
+  "30109": "0xa6f5ddbf0bd4d03334523465439d301080574742", // Polygon
+  "30111": "0x7b8a0fd9d6ae5011d5cbd3e85ed6d5510f98c9bf", // Optimism
+  "30110": "0xddaa92ce2d2fac3f7c5eae19136e438902ab46cc", // Arbitrum
+  "30112": "0x313328609a9c38459cae56625fff7f2ad6dcde3b", // Fantom
+  "30184": "0x41ef29f974fc9f6772654f005271c64210425391", // Fantom
+  // "30102": "0x313328609a9c38459cae56625fff7f2ad6dcde3b", // BNB
 };
 
-// Adjusting EndpointId type to string literals
-type EndpointId = "30101" | "30106" | "30109" | "30111" | "30112";
+type EndpointId = "30101" | "30106" | "30109" | "30110" | "30111" | "30112" | "30184"; // | "30102"
 
-const idToChainNameMap: { [key in EndpointId]: string } = {
+const idToChainNameMap: { [key in EndpointId]: SupportedNetwork } = {
   "30101": "ethereum",
-  // "30102": "BNB Chain (BSC)",
   "30106": "avalanche",
   "30109": "polygon",
-  // "30110": "arbitrum",
+  "30110": "arbitrum",
   "30111": "optimism",
   "30112": "fantom",
-}
+  "30184": "base",
+  // "30102": "bnb",
+};
 
 // Definition of supported networks
 export function networkNameToEndpointID(
